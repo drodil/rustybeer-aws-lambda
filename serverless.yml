@@ -1,0 +1,30 @@
+service: rustybeer
+provider:
+  name: aws
+  runtime: rust
+  memorySize: 512
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'eu-west-1'}
+  tags:
+    app: rustybeer
+  endpointType: REGIONAL
+
+package:
+  individually: true
+
+plugins:
+  - serverless-rust
+
+functions:
+  abv:
+    handler: abv
+    description: Calculates ABV from original and final gravities
+    events:
+      - http:
+          path: abv
+          method: post
+          request:
+            headers:
+              Content-Type: true
+                #schema:
+                #application/json: ${file(requests/abv.json)}
