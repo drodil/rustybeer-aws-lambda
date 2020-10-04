@@ -1,8 +1,2 @@
-[package]
-name = "rustybeer-aws-lambda"
-version = "0.1.0"
-authors = ["Heikki Hellgren <heiccih@gmail.com>"]
-edition = "2018"
-
-[dependencies]
-futures = "0.1.29"
+[workspace]
+members = ["abv"]
