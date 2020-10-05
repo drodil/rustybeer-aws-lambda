@@ -28,3 +28,15 @@ functions:
               Content-Type: true
                 #schema:
                 #application/json: ${file(requests/abv.json)}
+  dilution:
+    handler: dilution
+    description: Calculates new gravity after wort dilution
+    events:
+      - http:
+          path: dilution
+          method: post
+          request:
+            headers:
+              Content-Type: true
+                #schema:
+                #application/json: ${file(requests/abv.json)}

@@ -1,2 +1,2 @@
 [workspace]
-members = ["lambda_gateway", "abv"]
+members = ["lambda_gateway", "abv", "dilution"]
