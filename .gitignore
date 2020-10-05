@@ -12,3 +12,5 @@ Cargo.lock
 # Serverless cache
 .serverless/
 .credentials
+node_modules/
+package-lock.json
