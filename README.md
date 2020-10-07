@@ -17,6 +17,7 @@ Once all that is done, install the following packages:
 ```bash
 npm install -g serverless
 npm install --save-dev serverless-rust
+npm install --save-dev serverless-openapi-documentation
 ```
 
 And setup your AWS CLI for deployments:

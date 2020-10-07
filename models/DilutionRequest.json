@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+        "currentGravity": {
+            "type": "number"
+        },
+        "currentVolume": {
+            "type": "number"
+        },
+        "targetGravity": {
+            "type": "number"
+        },
+        "targetVolume": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "currentGravity",
+        "currentVolume"
+    ],
+    "type": "object"
+}

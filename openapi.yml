@@ -1,0 +1,107 @@
+openapi: 3.0.0
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    AbvResponse:
+      properties:
+        abv:
+          type: number
+      type: object
+    AbvRequest:
+      properties:
+        finalGravity:
+          type: number
+        originalGravity:
+          type: number
+      required:
+        - finalGravity
+        - originalGravity
+      type: object
+    DilutionResponse:
+      type: object
+      properties:
+        gravity:
+          type: number
+        volume:
+          type: number
+    DilutionRequest:
+      properties:
+        currentGravity:
+          type: number
+        currentVolume:
+          type: number
+        targetGravity:
+          type: number
+        targetVolume:
+          type: number
+      required:
+        - currentGravity
+        - currentVolume
+      type: object
+  securitySchemes: {}
+info:
+  title: Rustybeer
+  description: Beer brewing calculators and other utilities right at your fingertip!
+  version: '1'
+servers: []
+paths:
+  /abv:
+    post:
+      operationId: abv
+      summary: Calculate ABV from OG and FG
+      description: Calculates Alcohol By Volume from Original and Final Gravity values
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbvRequest'
+        description: Values of original and final gravities measured
+      parameters: []
+      responses:
+        '200':
+          description: Calculated Alcohol By Volume
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AbvResponse'
+        '500':
+          description: An error message when calculating ABV
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dilution:
+    post:
+      operationId: dilution
+      summary: Calculates new gravity or volume after dilution/boil-off
+      description: >-
+        Calculates new gravity after wort dilution or boil off from original
+        gravity, current wort volume and the target volume (targetVolume must be
+        defined) AND/OR Calculates new volume for wanted target gravity from
+        original gravity, current wort volume (targetGravity must be defined)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DilutionRequest'
+        description: >-
+          Values of original gravity, wort volume and either target volume or
+          gravity
+      parameters: []
+      responses:
+        '200':
+          description: Final gravity or target volume
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DilutionResponse'
+        '500':
+          description: An error message when calculating ABV
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

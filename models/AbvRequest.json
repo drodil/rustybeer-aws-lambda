@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+        "finalGravity": {
+            "type": "number"
+        },
+        "originalGravity": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "finalGravity",
+        "originalGravity"
+    ],
+    "type": "object"
+}

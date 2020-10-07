@@ -14,6 +14,10 @@ package:
 
 plugins:
   - serverless-rust
+  - serverless-openapi-documentation-v2
+
+custom:
+  documentation: ${file(serverless.doc.yml):documentation}
 
 functions:
   abv:
@@ -23,11 +27,12 @@ functions:
       - http:
           path: abv
           method: post
+          documentation: ${file(serverless.doc.yml):endpoints.abv}
           request:
             headers:
               Content-Type: true
-                #schema:
-                #application/json: ${file(requests/abv.json)}
+              schema:
+                application/json: ${file(models/AbvRequest.json)}
   dilution:
     handler: dilution
     description: Calculates new gravity after wort dilution
@@ -35,8 +40,9 @@ functions:
       - http:
           path: dilution
           method: post
+          documentation: ${file(serverless.doc.yml):endpoints.dilution}
           request:
             headers:
               Content-Type: true
-                #schema:
-                #application/json: ${file(requests/abv.json)}
+              schema:
+                application/json: ${file(models/DilutionRequest.json)}

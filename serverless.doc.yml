@@ -1,0 +1,70 @@
+endpoints:
+  abv:
+    summary: Calculate ABV from OG and FG
+    description: Calculates Alcohol By Volume from Original and Final Gravity values
+    requestBody:
+      description: Values of original and final gravities measured
+    requestModels:
+      application/json: AbvRequest
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: Calculated Alcohol By Volume
+        responseModels:
+          application/json: AbvResponse
+      - statusCode: 500
+        responseBody:
+          description: An error message when calculating ABV
+        responseModels:
+          application/json: ErrorResponse
+  dilution:
+    summary: Calculates new gravity or volume after dilution/boil-off
+    description: Calculates new gravity after wort dilution or boil off from original gravity, current wort volume and the target volume (targetVolume must be defined)
+      AND/OR
+      Calculates new volume for wanted target gravity from original gravity, current wort volume (targetGravity must be defined)
+    requestBody:
+      description: Values of original gravity, wort volume and either target volume or gravity
+    requestModels:
+      application/json: DilutionRequest
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: Final gravity or target volume
+        responseModels:
+          application/json: DilutionResponse
+      - statusCode: 500
+        responseBody:
+          description: An error message when calculating ABV
+        responseModels:
+          application/json: ErrorResponse
+
+
+documentation:
+  version: '1'
+  title: 'Rustybeer'
+  description: 'Beer brewing calculators and other utilities right at your fingertip!'
+  models:
+    - name: ErrorResponse
+      description: Fatal error occured handling the request
+      contentType: application/json
+      schema: ${file(models/ErrorResponse.json)}
+
+    - name: AbvResponse
+      description: ABV response model
+      contentType: application/json
+      schema: ${file(models/AbvResponse.json)}
+
+    - name: AbvRequest
+      description: ABV request model
+      contentType: application/json
+      schema: ${file(models/AbvRequest.json)}
+
+    - name: DilutionResponse
+      description: Dilution response model
+      contentType: application/json
+      schema: ${file(models/DilutionResponse.json)}
+
+    - name: DilutionRequest
+      description: Dilution request model
+      contentType: application/json
+      schema: ${file(models/DilutionRequest.json)}
