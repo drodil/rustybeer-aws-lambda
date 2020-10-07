@@ -1,8 +1,8 @@
 // TODO: This could be replaced with lambda-http
-use std::collections::HashMap;
-use serde::{Serialize, Deserialize};
-use serde::de::{DeserializeOwned, Deserializer};
 use serde::de::Error as SerdeError;
+use serde::de::{DeserializeOwned, Deserializer};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 pub fn deserialize<'a, T: DeserializeOwned, D: Deserializer<'a>>(
     deserializer: D,
@@ -38,7 +38,7 @@ pub struct LambdaResponseBuilder {
     status_code: u16,
     headers: HashMap<String, String>,
     body: String,
-    is_base64_encoded: bool
+    is_base64_encoded: bool,
 }
 
 impl LambdaResponseBuilder {
@@ -67,7 +67,8 @@ impl LambdaResponseBuilder {
     }
 
     pub fn set_json_payload<D: Serialize>(mut self, data: D) -> Self {
-        self.headers.entry("Content-Type".to_owned())
+        self.headers
+            .entry("Content-Type".to_owned())
             .or_insert_with(|| "application/json".to_owned());
         self.body = serde_json::to_string(&data).unwrap();
         self
