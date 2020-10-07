@@ -1,9 +1,9 @@
 use rustybeer::calculators::diluting;
 
-use simple_logger::SimpleLogger;
 use lambda::{handler_fn, Context};
-use serde::{Serialize, Deserialize};
 use lambda_gateway::{LambdaRequest, LambdaResponse, LambdaResponseBuilder};
+use serde::{Deserialize, Serialize};
+use simple_logger::SimpleLogger;
 
 type Error = Box<dyn std::error::Error + Sync + Send + 'static>;
 
@@ -27,32 +27,43 @@ struct Output {
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    SimpleLogger::new().with_level(log::LevelFilter::Debug).init()?;
+    SimpleLogger::new()
+        .with_level(log::LevelFilter::Debug)
+        .init()?;
     lambda::run(handler_fn(calculate_dilution)).await?;
     Ok(())
 }
 
-async fn calculate_dilution(event: LambdaRequest<Input>, _c: Context) -> Result<LambdaResponse, Error> {
+async fn calculate_dilution(
+    event: LambdaRequest<Input>,
+    _c: Context,
+) -> Result<LambdaResponse, Error> {
     let payload = event.body();
-    let dilution_calc = diluting::Diluting{};
+    let dilution_calc = diluting::Diluting {};
 
     let mut gravity = None;
     let mut volume = None;
     if let Some(tv) = payload.target_volume {
-        gravity = Some(dilution_calc.calculate_new_gravity(payload.current_gravity, payload.current_volume, tv));
+        gravity = Some(dilution_calc.calculate_new_gravity(
+            payload.current_gravity,
+            payload.current_volume,
+            tv,
+        ));
     }
     if let Some(gr) = payload.target_gravity {
-        volume = Some(dilution_calc.calculate_new_volume(payload.current_volume, payload.current_gravity, gr));
+        volume = Some(dilution_calc.calculate_new_volume(
+            payload.current_volume,
+            payload.current_gravity,
+            gr,
+        ));
     }
 
-    let data = Output{
+    let data = Output {
         gravity: gravity,
         volume: volume,
     };
 
-    let response = LambdaResponseBuilder::new()
-        .set_json_payload(data)
-        .build();
+    let response = LambdaResponseBuilder::new().set_json_payload(data).build();
 
     Ok(response)
 }
