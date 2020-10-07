@@ -14,12 +14,15 @@ struct Input {
     #[serde(rename = "currentVolume")]
     current_volume: f32,
     #[serde(rename = "targetVolume")]
-    target_volume: f32
+    target_volume: Option<f32>,
+    #[serde(rename = "targetGravity")]
+    target_gravity: Option<f32>,
 }
 
 #[derive(Serialize, Debug)]
 struct Output {
-    gravity: f32
+    gravity: Option<f32>,
+    volume: Option<f32>,
 }
 
 #[tokio::main]
@@ -32,9 +35,21 @@ async fn main() -> Result<(), Error> {
 async fn calculate_dilution(event: LambdaRequest<Input>, _c: Context) -> Result<LambdaResponse, Error> {
     let payload = event.body();
     let dilution_calc = diluting::Diluting{};
+
+    let mut gravity = None;
+    let mut volume = None;
+    if let Some(tv) = payload.target_volume {
+        gravity = Some(dilution_calc.calculate_new_gravity(payload.current_gravity, payload.current_volume, tv));
+    }
+    if let Some(gr) = payload.target_gravity {
+        volume = Some(dilution_calc.calculate_new_volume(payload.current_volume, payload.current_gravity, gr));
+    }
+
     let data = Output{
-        gravity: dilution_calc.calculate_dilution(payload.current_gravity, payload.current_volume, payload.target_volume),
+        gravity: gravity,
+        volume: volume,
     };
+
     let response = LambdaResponseBuilder::new()
         .set_json_payload(data)
         .build();
